@@ -1,0 +1,14 @@
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-svc #  Name of the service for internal referencing
+spec:
+  ports:          
+    - port: 27017         # The poart for MongoDB to sit on
+      protocol: TCP       # the protocol MongoDV uses
+      targetPort: 27017   # Telling it to open itself
+      nodePort: 32000     # the port for the node to be open for querying
+  selector:
+    app: mongo   #  Matches pods with label "app: mongo" for traffic routing
+  type: NodePort #  Exposes the srevice externally on a static port, in this case 32000
