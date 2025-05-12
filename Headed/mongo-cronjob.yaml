@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mongo-backup-job
+spec:
+  schedule: "*/3 * * * *"  # Run every 3 minutes
+  successfulJobsHistoryLimit: 2  # Keep only 2 successful backups
+  failedJobsHistoryLimit: 1  # Keep only 1 failed job
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: mongo-backup
+              image: mongo:6
+              command:
+              command:
+                - /bin/sh
+                - -c
+                - >
+                  TIMESTAMP=$(date +%Y%m%d-%H%M%S) &&
+                  BACKUP_FILE="/backup/mongo-backup-$TIMESTAMP.gz" &&
+                  mongodump --uri="mongodb://$(MONGO_INITDB_ROOT_USERNAME):$(MONGO_INITDB_ROOT_PASSWORD)@mongo:27017/school?authSource=admin" --archive=$BACKUP_FILE --gzip &&
+                  ls -tp /backup | grep 'mongo-backup-' | grep -v '/$' | tail -n +3 | xargs -I {} rm -- /backup/{}
+
+              env:
+                - name: MONGO_INITDB_ROOT_USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: mongo-secret
+                      key: mongo-user
+                - name: MONGO_INITDB_ROOT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: mongo-secret
+                      key: mongo-password
+              volumeMounts:
+                - name: backup-storage
+                  mountPath: /backup
+          restartPolicy: OnFailure
+          volumes:
+            - name: backup-storage
+              persistentVolumeClaim:
+                claimName: mongo-backup-pvc-unique

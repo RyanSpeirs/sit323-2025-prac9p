@@ -1,0 +1,7 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: mongo-storage-local  # Name of the StorageClass
+provisioner: kubernetes.io/no-provisioner  # No dynamic provisioning for hostPath
+volumeBindingMode: Immediate  # Bind PV to PVC immediately after it's created
+reclaimPolicy: Delete  # Delete the PV and associated data when the PVC is deleted

@@ -1,13 +1,18 @@
-//  student.js
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
-const studentSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true },
-    age: { type: Number, required: true },
-    grade: { type: String, required: true },
+// Define the schema for the Student
+const studentSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true, // Name is required
   },
-  { timestamps: true }
-);
+  age: {
+    type: Number,
+    required: true, // Age is required
+  },
+});
 
-export default mongoose.model("Student", studentSchema);
+// Create the model
+const Student = mongoose.model('Student', studentSchema);
+
+module.exports = Student;

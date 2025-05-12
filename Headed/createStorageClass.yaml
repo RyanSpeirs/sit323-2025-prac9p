@@ -1,8 +1,0 @@
-# createStorageClass.yaml  600152989 Ryan Speirs
-apiVersion: storage.k8s.io/v1
-kind: StorageClass  #  declares this resources as a Storage Class config
-metadata:
-  name: demo-storage  # the name PVCs use to refer to this Storage Class
-provisioner: docker.io/hostpath
-volumeBindingMode: Immediate  # A PV is bound to the PVC when its created, 
-reclaimPolicy: Delete  # When a PVC using this StorClass is deleted, the associated PV and data gets deleted too

@@ -1,0 +1,16 @@
+# mongo-pv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongo-pv
+spec:
+  capacity:
+    storage: 1Gi  # Adjust storage size based on your requirements
+  accessModes:
+    - ReadWriteOnce  # Allows only one pod to access the volume at a time
+  persistentVolumeReclaimPolicy: Retain  # This can be set to 'Delete' if you want to remove the PV after the PVC is deleted
+  storageClassName: mongo-storage-local  # Name of the storage class; 'manual' is often used for local volumes
+  volumeMode: Filesystem  # Ensures the volume is mounted as a filesystem
+  hostPath:
+    path: /mnt/data/mongo  # This is a local directory on the host where MongoDB data will be stored. 
+    type: DirectoryOrCreate  # If the directory doesn't exist, Kubernetes will create it

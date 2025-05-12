@@ -1,72 +1,90 @@
-//  server.js 
-import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import Student from "./student.js";  // Define a model called "Student"
+// server.js
+const express = require('express');
+const mongoose = require('mongoose');
+const Student = require('./Student'); // Import the Student model
+const mongoUrl = process.env.MONGO_URL || 'mongodb://admin1:password123@mongo:27017/school?authSource=admin';
 
-dotenv.config();
+
 const app = express();
-const PORT = process.env.PORT || 3000;
+const port = 3000;
 
-app.use(express.json());
+app.use(express.json()); // Middleware to parse JSON bodies
 
-// Connect to MongoDB using Mongoose
-mongoose
-  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("Mongo connected"))
-  .catch((err) => {
-    console.error("Mongo connection error:", err);
-    process.exit(1);
-  });
+// Connect to MongoDB (replace with your MongoDB URL if needed)
+mongoose.connect(mongoUrl, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((err) => console.error('Failed to connect to MongoDB', err));
 
-// CRUD endpoints for students
-app.post("/students", async (req, res) => {
+// CREATE - Add a new student
+app.post('/students', async (req, res) => {
+  const { name, age } = req.body;
   try {
-    const student = await Student.create(req.body);
-    res.status(201).json(student);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    const student = new Student({ name, age });
+    await student.save();
+    res.status(201).send(student); // Send back the created student
+  } catch (err) {
+    res.status(500).send('Error creating student: ' + err.message);
   }
 });
 
-app.get("/students", async (_req, res) => {
+// READ - Get all students
+app.get('/students', async (req, res) => {
   try {
-    const students = await Student.find().lean();
-    res.json(students);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to fetch students" });
+    const students = await Student.find(); // Get all students
+    res.status(200).json(students); // Send the list of students as JSON
+  } catch (err) {
+    res.status(500).send('Error retrieving students: ' + err.message);
   }
 });
 
-app.get("/students/:id", async (req, res) => {
+// READ - Get a student by ID
+app.get('/students/:id', async (req, res) => {
   try {
-    const student = await Student.findById(req.params.id).lean();
-    student ? res.json(student) : res.status(404).end();
-  } catch (error) {
-    res.status(500).json({ error: "Student not found" });
+    const student = await Student.findById(req.params.id);
+    if (!student) {
+      return res.status(404).send('Student not found');
+    }
+    res.status(200).json(student); // Send the student document
+  } catch (err) {
+    res.status(500).send('Error retrieving student: ' + err.message);
   }
 });
 
-app.put("/students/:id", async (req, res) => {
+// UPDATE - Update a student's information
+app.put('/students/:id', async (req, res) => {
+  const { name, age } = req.body;
   try {
-    const student = await Student.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    }).lean();
-    student ? res.json(student) : res.status(404).end();
-  } catch (error) {
-    res.status(400).json({ error: "Failed to update student" });
+    const student = await Student.findByIdAndUpdate(
+      req.params.id,
+      { name, age },
+      { new: true } // Return the updated document
+    );
+    if (!student) {
+      return res.status(404).send('Student not found');
+    }
+    res.status(200).json(student); // Send the updated student
+  } catch (err) {
+    res.status(500).send('Error updating student: ' + err.message);
   }
 });
 
-app.delete("/students/:id", async (req, res) => {
+// DELETE - Delete a student by ID
+app.delete('/students/:id', async (req, res) => {
   try {
-    const result = await Student.findByIdAndDelete(req.params.id).lean();
-    result ? res.status(204).end() : res.status(404).end();
-  } catch (error) {
-    res.status(400).json({ error: "Failed to delete student" });
+    const student = await Student.findByIdAndDelete(req.params.id);
+    if (!student) {
+      return res.status(404).send('Student not found');
+    }
+    res.status(200).send('Student deleted');
+  } catch (err) {
+    res.status(500).send('Error deleting student: ' + err.message);
   }
 });
 
-// Run the server
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});

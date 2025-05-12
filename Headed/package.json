@@ -1,20 +1,17 @@
 {
-  "name": "9.1headed",
+  "name": "headed",
   "version": "1.0.0",
-  "description": "headed version of task 9.1p",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/RyanSpeirs/sit323-2025-prac9p.git"
-  },
-  "author": "Ryan Speirs",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/RyanSpeirs/sit323-2025-prac9p/issues"
-  },
-  "homepage": "https://github.com/RyanSpeirs/sit323-2025-prac9p#readme"
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongoose": "^8.14.2"
+  }
 }

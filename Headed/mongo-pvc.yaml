@@ -1,0 +1,12 @@
+# mongo-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce  # Same as the PV's access mode
+  resources:
+    requests:
+      storage: 1Gi  # Size of the requested volume, matching the PV
+  storageClassName: mongo-storage-local  # This must match the StorageClass defined above
