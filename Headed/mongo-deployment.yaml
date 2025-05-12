@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: mongo
 spec:
-  replicas: 3  # Update replicas to 3 for primary + two secondaries
+  replicas: 1  # only for this
   selector:
     matchLabels:
       app: mongo
@@ -39,14 +39,3 @@ spec:
         - name: mongo-data
           persistentVolumeClaim:
             claimName: mongo-pvc
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: mongo-headless  # Changed name for the headless service to mongo-headless
-spec:
-  clusterIP: None  # Headless service for direct pod-to-pod communication
-  ports:
-    - port: 27017
-  selector:
-    app: mongo
