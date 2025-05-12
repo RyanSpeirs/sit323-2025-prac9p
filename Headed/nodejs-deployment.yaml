@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: nodejs-app
-          image: ryanspeirs/task9.1p:latest  # Replace with your image
+          image: ryanspeirs/task9.1p:latest  # 
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
           env:

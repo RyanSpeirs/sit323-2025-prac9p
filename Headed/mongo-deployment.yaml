@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: mongo
 spec:
-  replicas: 1
+  replicas: 3  # Update replicas to 3 for primary + two secondaries
   selector:
     matchLabels:
       app: mongo
@@ -16,6 +16,7 @@ spec:
       containers:
         - name: mongo
           image: mongo:4.0.8
+          imagePullPolicy: Always
           ports:
             - containerPort: 27017
           env:
@@ -29,6 +30,8 @@ spec:
                 secretKeyRef:
                   name: mongo-secret
                   key: mongo-password
+            - name: MONGO_INITDB_DATABASE
+              value: "admin"  # This will set the default database to "admin"
           volumeMounts:
             - name: mongo-data
               mountPath: /data/db
@@ -36,3 +39,14 @@ spec:
         - name: mongo-data
           persistentVolumeClaim:
             claimName: mongo-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-headless  # Changed name for the headless service to mongo-headless
+spec:
+  clusterIP: None  # Headless service for direct pod-to-pod communication
+  ports:
+    - port: 27017
+  selector:
+    app: mongo
