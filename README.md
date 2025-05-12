@@ -32,7 +32,7 @@ After this, expose the port for the node js service
 
 In a separate terminal, expose the port for the mongodb service
 
-    kubectl port-forward svc/mongo-service 27017:27017
+    kubectl port-forward svc/mongo 27017:27017
 
 
 Connect to it with Postman or Curl or Compass at
