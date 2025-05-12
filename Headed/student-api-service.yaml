@@ -1,0 +1,14 @@
+#  student-api-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: student-api-service
+spec:
+  selector:
+    app: student-api
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+      nodePort: 32000  # Choose a port that is available (32000 is an example)
+  type: NodePort

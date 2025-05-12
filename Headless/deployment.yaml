@@ -1,0 +1,33 @@
+#  deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: student-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: student-api
+  template:
+    metadata:
+      labels:
+        app: student-api
+    spec:
+      containers:
+        - name: student-api
+          image: your-dockerhub-username/student-api:latest  # ← replace with your actual image
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PORT
+              value: "3000"
+            - name: MONGO_URI
+              value: >
+                mongodb://admin1:$(MONGO_INITDB_ROOT_PASSWORD)@mongo-0.mongo.default.svc.cluster.local:27017,
+                mongo-1.mongo.default.svc.cluster.local:27017,
+                mongo-2.mongo.default.svc.cluster.local:27017/?replicaSet=rs0
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: password
