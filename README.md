@@ -1,6 +1,6 @@
 
 ## SIT323 9.1P
-There are two folders here, I originally planned to submit a demonstration of a headless mongo kubernetes service, however I was advised 09/05/2025 that this needed to be a headed instance. The folder marked Headless has a somewhat functional version of my original build, the Headed folder is the correct one.
+There are two folders here, I originally planned to submit a demonstration of a headless mongo kubernetes service, however I was advised 09/05/2025 that this needed to be a headed instance. The folder marked Headless has a somewhat functional version of my original build, the Headed folder is the correct one for the assessment.
 
 Docker Image Name:
 
