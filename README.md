@@ -55,7 +55,7 @@ DELETE request to remove an entry
 
     http://localhost:8080/students/< ID value here >
 
-## Headless interaction
+## Headless interaction (Works on Headless)
 If you want to go into the mongodb pods directly, you will need to reference the mongo-headless service specifically.
 
        rs.initiate({
