@@ -5,7 +5,7 @@ metadata:
 spec:
   schedule: "*/3 * * * *"  # Run every 3 minutes
   successfulJobsHistoryLimit: 2  # Keep only 2 successful backups
-  failedJobsHistoryLimit: 1  # Keep only 1 failed job
+  failedJobsHistoryLimit: 0  # Keep only 1 failed job
   jobTemplate:
     spec:
       template:
